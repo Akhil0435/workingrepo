@@ -31,7 +31,7 @@ extern "C" {
 #include <stdio.h>
 
 #include "bluez-api.h"
-
+#include <glib.h>
 #define AGENT_DBUS_INTERFACE "org.bluez.Agent1"
 #define AGENT_PATH "/org/blueztools"
 
