@@ -73,7 +73,7 @@ static void _obex_server_object_manager_handler(GDBusConnection *connection, con
         
         if(g_variant_lookup(interfaces_and_properties, OBEX_TRANSFER_DBUS_INTERFACE, "@a{sv}", &properties))
         {
-            g_print("[OBEX Server] Transfer started\n");
+            g_print("[OBEX Server] Transfer started chg\n");
             ObexTransfer *t = obex_transfer_new(interface_object_path);
             g_hash_table_insert(_transfers, g_strdup(interface_object_path), t);
             
@@ -91,7 +91,7 @@ static void _obex_server_object_manager_handler(GDBusConnection *connection, con
         
         if(g_variant_lookup(interfaces_and_properties, OBEX_SESSION_DBUS_INTERFACE, "@a{sv}", &properties))
         {
-            g_print("[OBEX Server] OBEX session opened\n");
+            g_print("[OBEX Server] OBEX session opened chg\n");
         }
         
         g_variant_unref(interfaces_and_properties);
@@ -109,7 +109,7 @@ static void _obex_server_object_manager_handler(GDBusConnection *connection, con
         {
             if(g_strcmp0(*inf, OBEX_TRANSFER_DBUS_INTERFACE) == 0)
             {
-                g_print("[OBEX Server] OBEX transfer closed\n");
+                g_print("[OBEX Server] OBEX transfer closed chg\n");
                 ObexTransfer *transfer = g_hash_table_lookup(_transfers, interface_object_path);
                 g_hash_table_remove(_transfers, interface_object_path);
                 g_object_unref(transfer);
@@ -119,7 +119,7 @@ static void _obex_server_object_manager_handler(GDBusConnection *connection, con
             
             if(g_strcmp0(*inf, OBEX_SESSION_DBUS_INTERFACE) == 0)
             {
-                g_print("[OBEX Server] OBEX session closed\n");
+                g_print("[OBEX Server] OBEX session closed chg\n");
             }
         }
         g_free(inf_array);
@@ -128,11 +128,14 @@ static void _obex_server_object_manager_handler(GDBusConnection *connection, con
 
 static void _obex_server_properties_handler(GDBusConnection *connection, const gchar *sender_name, const gchar *object_path, const gchar *interface_name, const gchar *signal_name, GVariant *parameters, gpointer user_data)
 {
+    g_print("_obex_server_properties_handler function started\n");
     const gchar *arg0 = g_variant_get_string(g_variant_get_child_value(parameters, 0), NULL);
     GVariant *changed_properties = g_variant_get_child_value(parameters, 1);
     
     if(g_strcmp0(arg0, OBEX_TRANSFER_DBUS_INTERFACE) == 0)
     {
+        g_print("_obex_transfer dbus interface if started\n");
+        
         ObexTransfer *transfer = g_hash_table_lookup(_transfers, object_path);
         
         guint64 size = 0x0;
@@ -140,11 +143,16 @@ static void _obex_server_properties_handler(GDBusConnection *connection, const g
         obex_transfer_get_size(transfer, NULL);
         g_variant_lookup(changed_properties, "Size", "t", &size);
         if(!size)
+        {
+            g_print("_obex_server_properties_handler if(!Size) started\n");
             size = obex_transfer_get_size(transfer, NULL);
+        }
         g_variant_lookup(changed_properties, "Transferred", "t", &transferred);
         
         if(size && transferred)
         {
+            g_print("_obex_server_properties_handler size && transfered started\n");
+            
             guint pp = (transferred / (gfloat) size)*100;
 
             if (!_update_progress)
@@ -171,7 +179,7 @@ static void _obex_server_properties_handler(GDBusConnection *connection, const g
         {
             if(g_strcmp0(status, "active") == 0)
             {
-                // g_print("[OBEX Server] Transfer active\n");
+                g_print("[OBEX Server] Transfer active\n");
             }
             else if(g_strcmp0(status, "complete") == 0)
             {
@@ -208,7 +216,7 @@ static void _obex_opp_client_object_manager_handler(GDBusConnection *connection,
         
         if(g_variant_lookup(interfaces_and_properties, OBEX_TRANSFER_DBUS_INTERFACE, "@a{sv}", &properties))
         {
-            // g_print("[OBEX Client] Transfer started\n");
+            g_print("[OBEX Client] Transfer started\n");
             ObexTransfer *t = obex_transfer_new(interface_object_path);
             g_hash_table_insert(_transfers, g_strdup(interface_object_path), t);
 
@@ -229,7 +237,7 @@ static void _obex_opp_client_object_manager_handler(GDBusConnection *connection,
         
         if(g_variant_lookup(interfaces_and_properties, OBEX_SESSION_DBUS_INTERFACE, "@a{sv}", &properties))
         {
-            // g_print("[OBEX Client] OBEX session opened\n");
+            g_print("[OBEX Client] OBEX session opened\n");
         }
         
         g_variant_unref(interfaces_and_properties);
@@ -247,7 +255,7 @@ static void _obex_opp_client_object_manager_handler(GDBusConnection *connection,
         {
             if(g_strcmp0(*inf, OBEX_TRANSFER_DBUS_INTERFACE) == 0)
             {
-                // g_print("[OBEX Client] OBEX transfer closed\n");
+                g_print("[OBEX Client] OBEX transfer closed\n");
                 ObexTransfer *transfer = g_hash_table_lookup(_transfers, interface_object_path);
                 g_hash_table_remove(_transfers, interface_object_path);
                 g_object_unref(transfer);
@@ -259,7 +267,7 @@ static void _obex_opp_client_object_manager_handler(GDBusConnection *connection,
             
             if(g_strcmp0(*inf, OBEX_SESSION_DBUS_INTERFACE) == 0)
             {
-                // g_print("[OBEX Client] OBEX session closed\n");
+                g_print("[OBEX Client] OBEX session closed\n");
             }
         }
         g_free(inf_array);
@@ -474,6 +482,7 @@ int main(int argc, char *argv[])
 
     if (server_arg)
     {
+        g_print("_obex_server_properties_handler is callback \n");
         if (argc == 2)
         {
             server_path_arg = argv[1];
