@@ -73,7 +73,7 @@ static void _obex_server_object_manager_handler(GDBusConnection *connection, con
         
         if(g_variant_lookup(interfaces_and_properties, OBEX_TRANSFER_DBUS_INTERFACE, "@a{sv}", &properties))
         {
-            g_print("[OBEX Server] Transfer started chg\n");
+            g_print("[OBEX Server] Transfer started chg first\n");
             ObexTransfer *t = obex_transfer_new(interface_object_path);
             g_hash_table_insert(_transfers, g_strdup(interface_object_path), t);
             
