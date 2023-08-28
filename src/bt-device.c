@@ -538,7 +538,7 @@ int main(int argc, char *argv[])
 
         AgentManager *agent_manager = agent_manager_new();
         
-        agent_need_unregister = TRUE;
+       gboolean agent_need_unregister = TRUE;
         
         register_agent_callbacks(TRUE, NULL, mainloop, &error);
         exit_if_error(error);
