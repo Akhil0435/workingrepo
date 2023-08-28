@@ -504,9 +504,16 @@ int main(int argc, char *argv[])
 
         ObexAgentManager *manager = obex_agent_manager_new();
         
+        g_print("line 507 if not executed \n");
+
         guint obex_server_object_id = g_dbus_connection_signal_subscribe(session_conn, "org.bluez.obex", "org.freedesktop.DBus.ObjectManager", NULL, NULL, NULL, G_DBUS_SIGNAL_FLAGS_NONE, _obex_server_object_manager_handler, NULL, NULL);
-        guint obex_server_properties_id = g_dbus_connection_signal_subscribe(session_conn, "org.bluez.obex", "org.freedesktop.DBus.Properties", "PropertiesChanged", NULL, NULL, G_DBUS_SIGNAL_FLAGS_NONE, _obex_server_properties_handler, NULL, NULL);
+
+        g_print("line 510 is gng to execute \n");
+
         
+        guint obex_server_properties_id = g_dbus_connection_signal_subscribe(session_conn, "org.bluez.obex", "org.freedesktop.DBus.Properties", "PropertiesChanged", NULL, NULL, G_DBUS_SIGNAL_FLAGS_NONE, _obex_server_properties_handler, NULL, NULL);
+        g_print("line 511 to check line 510 working or not\n");
+
         ObexAgent *agent = obex_agent_new(root_folder, auto_accept);
         _root_path = g_strdup(root_folder);
         g_free(root_folder);
