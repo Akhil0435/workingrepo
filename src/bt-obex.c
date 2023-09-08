@@ -74,7 +74,7 @@ static void _obex_server_object_manager_handler(GDBusConnection *connection, con
         
         if(g_variant_lookup(interfaces_and_properties, OBEX_TRANSFER_DBUS_INTERFACE, "@a{sv}", &properties))
         {
-            g_print("[OBEX Server] Transfer started chg first\n");
+            g_print("[OBEX Server] Transfer started\n");
             ObexTransfer *t = obex_transfer_new(interface_object_path);
             g_hash_table_insert(_transfers, g_strdup(interface_object_path), t);
             
@@ -92,7 +92,7 @@ static void _obex_server_object_manager_handler(GDBusConnection *connection, con
         
         if(g_variant_lookup(interfaces_and_properties, OBEX_SESSION_DBUS_INTERFACE, "@a{sv}", &properties))
         {
-            g_print("[OBEX Server] OBEX session opened chg\n");
+            g_print("[OBEX Server] OBEX session opened\n");
         }
         
         g_variant_unref(interfaces_and_properties);
@@ -113,7 +113,7 @@ static void _obex_server_object_manager_handler(GDBusConnection *connection, con
         {
             if(g_strcmp0(*inf, OBEX_TRANSFER_DBUS_INTERFACE) == 0)
             {
-                g_print("[OBEX Server] OBEX transfer closed chg\n");
+                g_print("[OBEX Server] OBEX transfer closed\n");
                 ObexTransfer *transfer = g_hash_table_lookup(_transfers, interface_object_path);
                 g_hash_table_remove(_transfers, interface_object_path);
                 g_object_unref(transfer);
@@ -123,7 +123,7 @@ static void _obex_server_object_manager_handler(GDBusConnection *connection, con
             
             if(g_strcmp0(*inf, OBEX_SESSION_DBUS_INTERFACE) == 0)
             {
-                g_print("[OBEX Server] OBEX session closed chg\n");
+                g_print("[OBEX Server] OBEX session closed\n");
             }
         }
         g_free(inf_array);
@@ -132,13 +132,13 @@ static void _obex_server_object_manager_handler(GDBusConnection *connection, con
 
 static void _obex_server_properties_handler(GDBusConnection *connection, const gchar *sender_name, const gchar *object_path, const gchar *interface_name, const gchar *signal_name, GVariant *parameters, gpointer user_data)
 {
-    g_print("_obex_server_properties_handler function started\n");
+    g_print("_obex_server_properties_handler function is invoked\n");
     const gchar *arg0 = g_variant_get_string(g_variant_get_child_value(parameters, 0), NULL);
     GVariant *changed_properties = g_variant_get_child_value(parameters, 1);
     
     if(g_strcmp0(arg0, OBEX_TRANSFER_DBUS_INTERFACE) == 0)
     {
-        g_print("_obex_transfer dbus interface if started\n");
+        g_print("in fun _obex_server_properties_handler if(_obex_transfer dbus interface) executed\n");
         
         ObexTransfer *transfer = g_hash_table_lookup(_transfers, object_path);
         
@@ -148,14 +148,14 @@ static void _obex_server_properties_handler(GDBusConnection *connection, const g
         g_variant_lookup(changed_properties, "Size", "t", &size);
         if(!size)
         {
-            g_print("_obex_server_properties_handler if(!Size) started\n");
+            g_print("in fun _obex_server_properties_handler if(!Size) is executed\n");
             size = obex_transfer_get_size(transfer, NULL);
         }
         g_variant_lookup(changed_properties, "Transferred", "t", &transferred);
         
         if(size && transferred)
         {
-            g_print("_obex_server_properties_handler size && transfered started\n");
+            g_print("in fun _obex_server_properties_handler if(size && transfered) is executed\n");
             
             guint pp = (transferred / (gfloat) size)*100;
 
@@ -508,15 +508,15 @@ int main(int argc, char *argv[])
         g_print("obex_agent file invocation1\n");
         ObexAgentManager *manager = obex_agent_manager_new();
         
-        g_print("line 507 if not executed \n");
+        g_print("line 511\n");
 
         guint obex_server_object_id = g_dbus_connection_signal_subscribe(session_conn, "org.bluez.obex", "org.freedesktop.DBus.ObjectManager", NULL, NULL, NULL, G_DBUS_SIGNAL_FLAGS_NONE, _obex_server_object_manager_handler, NULL, NULL);
 
-        g_print("line 510 is gng to execute \n");
+        g_print("line 515 \n");
 
         
         guint obex_server_properties_id = g_dbus_connection_signal_subscribe(session_conn, "org.bluez.obex", "org.freedesktop.DBus.Properties", "PropertiesChanged", NULL, NULL, G_DBUS_SIGNAL_FLAGS_NONE, _obex_server_properties_handler, NULL, NULL);
-        g_print("line 511 to check line 510 working or not\n");
+        g_print("line 519 \n");
 
         ObexAgent *agent = obex_agent_new(root_folder, auto_accept);
         _root_path = g_strdup(root_folder);
