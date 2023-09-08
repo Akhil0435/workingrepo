@@ -505,7 +505,7 @@ int main(int argc, char *argv[])
 
         _transfers = g_hash_table_new(g_str_hash, g_str_equal);
         _transfer_infos = g_hash_table_new(g_str_hash, g_str_equal);
-
+        g_print("obex_agent file invocation1\n");
         ObexAgentManager *manager = obex_agent_manager_new();
         
         g_print("line 507 if not executed \n");
