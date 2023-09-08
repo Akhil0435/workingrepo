@@ -130,6 +130,7 @@ static void obex_agent_class_init(ObexAgentClass *klass)
 
 static void obex_agent_init(ObexAgent *self)
 {
+	g_print("obex_agent.c  obex_agent_init invoked");
 	self->priv = obex_agent_get_instance_private(self);
         g_assert(session_conn != NULL);
         self->priv->registration_id = 0;
@@ -147,7 +148,8 @@ static void obex_agent_init(ObexAgent *self)
         GDBusNodeInfo *obex_agent_node_info = g_dbus_node_info_new_for_xml(_obex_agent_introspect_xml, &error);
         g_assert(error == NULL);
         GDBusInterfaceInfo *obex_agent_interface_info = g_dbus_node_info_lookup_interface(obex_agent_node_info, OBEX_AGENT_DBUS_INTERFACE);
-        obex_agent_table.method_call = _obex_agent_method_call_func;
+        g_print("obex_agent.c method call updated");
+	obex_agent_table.method_call = _obex_agent_method_call_func;
 	self->priv->registration_id = g_dbus_connection_register_object(session_conn, OBEX_AGENT_DBUS_PATH, obex_agent_interface_info, &obex_agent_table, self, _obex_agent_g_destroy_notify, &error);
         g_assert(error == NULL);
         g_assert(self->priv->registration_id != 0);
@@ -200,6 +202,7 @@ ObexAgent *obex_agent_new(const gchar *root_folder, const gboolean auto_accept)
 /* Methods */
 static void _obex_agent_method_call_func(GDBusConnection *connection, const gchar *sender, const gchar *object_path, const gchar *interface_name, const gchar *method_name, GVariant *parameters, GDBusMethodInvocation *invocation, gpointer user_data)
 {
+	g_print("obex_agent.c _obex_agent_method_call_func invoked");
     g_assert(user_data != NULL);
     ObexAgent *self = user_data;
     
