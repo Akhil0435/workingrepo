@@ -65,6 +65,7 @@ static void sigterm_handler(int sig)
 
 static void _obex_server_object_manager_handler(GDBusConnection *connection, const gchar *sender_name, const gchar *object_path, const gchar *interface_name, const gchar *signal_name, GVariant *parameters, gpointer user_data)
 {
+    g_print("_obex_server_object_manager_handler invoked\n");
     if(g_strcmp0(signal_name, "InterfacesAdded") == 0)
     {
         const gchar *interface_object_path = g_variant_get_string(g_variant_get_child_value(parameters, 0), NULL);
@@ -96,7 +97,10 @@ static void _obex_server_object_manager_handler(GDBusConnection *connection, con
         
         g_variant_unref(interfaces_and_properties);
         if(properties)
+        {
+            g_print("properties\n");
             g_variant_unref(properties);
+        }
     }
     else if(g_strcmp0(signal_name, "InterfacesRemoved") == 0)
     {
