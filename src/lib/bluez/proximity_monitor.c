@@ -81,9 +81,9 @@ static void proximity_monitor_class_init(ProximityMonitorClass *klass)
 
 	/* Properties registration */
 	GParamSpec *pspec = NULL;
-	g_print("proximity_monitor.c signal sent through get");
+	g_print("proximity_monitor.c signal sent through get\n");
 	gobject_class->get_property = _proximity_monitor_get_property;
-	g_print("proximity_monitor.c signal sent through set");
+	g_print("proximity_monitor.c signal sent through set\n");
 	gobject_class->set_property = _proximity_monitor_set_property;
 	
 	/* object DBusObjectPath [readwrite, construct only] */
@@ -95,7 +95,7 @@ static void proximity_monitor_class_init(ProximityMonitorClass *klass)
 
 static void proximity_monitor_init(ProximityMonitor *self)
 {
-	g_print("proximity_monitor.c started");
+	g_print("proximity_monitor.c started\n");
 	self->priv = proximity_monitor_get_instance_private (self);
 	self->priv->proxy = NULL;
 	self->priv->properties = NULL;
