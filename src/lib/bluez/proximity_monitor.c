@@ -49,7 +49,7 @@ enum {
 };
 
 static void _proximity_monitor_get_property(GObject *object, guint property_id, GValue *value, GParamSpec *pspec);
-static void _proximity_monitor__property(GObject *object, guint property_id, const GValue *value, GParamSpec *pspec);
+static void _proximity_monitor_set_property(GObject *object, guint property_id, const GValue *value, GParamSpec *pspec);
 
 static void _proximity_monitor_create_gdbus_proxy(ProximityMonitor *self, const gchar *dbus_service_name, const gchar *dbus_object_path, GError **error);
 
