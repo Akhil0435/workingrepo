@@ -75,14 +75,16 @@ static void obex_session_finalize (GObject *gobject)
 
 static void obex_session_class_init(ObexSessionClass *klass)
 {
+	g_print("session.c obex_session_class_init \n");
 	GObjectClass *gobject_class = G_OBJECT_CLASS(klass);
 
 	gobject_class->dispose = obex_session_dispose;
 
 	/* Properties registration */
 	GParamSpec *pspec = NULL;
-
+	g_print("session.c get signal 1\n");
 	gobject_class->get_property = _obex_session_get_property;
+	g_print("session.c set signal 1\n");
 	gobject_class->set_property = _obex_session_set_property;
 	
 	/* object DBusObjectPath [readwrite, construct only] */
@@ -94,6 +96,8 @@ static void obex_session_class_init(ObexSessionClass *klass)
 
 static void obex_session_init(ObexSession *self)
 {
+	g_print("session.c obex_session_init \n");
+	g_print("session.c get signal 2\n");
 	self->priv = obex_session_get_instance_private (self);
 	self->priv->proxy = NULL;
 	self->priv->properties = NULL;
@@ -107,6 +111,7 @@ static void _obex_session_get_property(GObject *object, guint property_id, GValu
 
 	switch (property_id) {
 	case PROP_DBUS_OBJECT_PATH:
+		g_print("session.c get signal 3\n");
 		g_value_set_string(value, obex_session_get_dbus_object_path(self));
 		break;
 
@@ -164,6 +169,7 @@ const gchar *obex_session_get_dbus_object_path(ObexSession *self)
 {
 	g_assert(OBEX_SESSION_IS(self));
 	g_assert(self->priv->proxy != NULL);
+	g_print("session.c get signal 4\n");
 	return g_dbus_proxy_get_object_path(self->priv->proxy);
 }
 
@@ -175,7 +181,9 @@ const gchar *obex_session_get_capabilities(ObexSession *self, GError **error)
 	GVariant *proxy_ret = g_dbus_proxy_call_sync(self->priv->proxy, "GetCapabilities", NULL, G_DBUS_CALL_FLAGS_NONE, -1, NULL, error);
 	if (proxy_ret != NULL)
 		return NULL;
+	g_print("session.c get signal 5\n");
 	proxy_ret = g_variant_get_child_value(proxy_ret, 0);
+	g_print("session.c get signal 6\n");
 	ret = g_variant_get_string(proxy_ret, NULL);
 	g_variant_unref(proxy_ret);
 	return ret;
@@ -186,6 +194,7 @@ GVariant *obex_session_get_properties(ObexSession *self, GError **error)
 {
 	g_assert(OBEX_SESSION_IS(self));
 	g_assert(self->priv->properties != NULL);
+	g_print("session.c get signal 7\n");
 	return properties_get_all(self->priv->properties, OBEX_SESSION_DBUS_INTERFACE, error);
 }
 
@@ -193,6 +202,7 @@ void obex_session_set_property(ObexSession *self, const gchar *name, const GVari
 {
 	g_assert(OBEX_SESSION_IS(self));
 	g_assert(self->priv->properties != NULL);
+	g_print("session.c set signal 3\n");
 	properties_set(self->priv->properties, OBEX_SESSION_DBUS_INTERFACE, name, value, error);
 }
 
@@ -200,9 +210,11 @@ guint8 obex_session_get_channel(ObexSession *self, GError **error)
 {
 	g_assert(OBEX_SESSION_IS(self));
 	g_assert(self->priv->properties != NULL);
+	g_print("session.c get signal 8\n");
 	GVariant *prop = properties_get(self->priv->properties, OBEX_SESSION_DBUS_INTERFACE, "Channel", error);
 	if(prop == NULL)
 		return 0;
+	g_print("session.c get signal 9\n");
 	guchar ret = g_variant_get_byte(prop);
 	g_variant_unref(prop);
 	return ret;
@@ -212,9 +224,11 @@ const gchar *obex_session_get_destination(ObexSession *self, GError **error)
 {
 	g_assert(OBEX_SESSION_IS(self));
 	g_assert(self->priv->properties != NULL);
+	g_print("session.c get signal 10\n");
 	GVariant *prop = properties_get(self->priv->properties, OBEX_SESSION_DBUS_INTERFACE, "Destination", error);
 	if(prop == NULL)
 		return NULL;
+	g_print("session.c get signal 11\n");
 	const gchar *ret = g_variant_get_string(prop, NULL);
 	g_variant_unref(prop);
 	return ret;
@@ -224,9 +238,11 @@ const gchar *obex_session_get_root(ObexSession *self, GError **error)
 {
 	g_assert(OBEX_SESSION_IS(self));
 	g_assert(self->priv->properties != NULL);
+	g_print("session.c get signal 12\n");
 	GVariant *prop = properties_get(self->priv->properties, OBEX_SESSION_DBUS_INTERFACE, "Root", error);
 	if(prop == NULL)
 		return NULL;
+	g_print("session.c get signal 13\n");
 	const gchar *ret = g_variant_get_string(prop, NULL);
 	g_variant_unref(prop);
 	return ret;
@@ -236,9 +252,11 @@ const gchar *obex_session_get_source(ObexSession *self, GError **error)
 {
 	g_assert(OBEX_SESSION_IS(self));
 	g_assert(self->priv->properties != NULL);
+	g_print("session.c get signal 14\n");
 	GVariant *prop = properties_get(self->priv->properties, OBEX_SESSION_DBUS_INTERFACE, "Source", error);
 	if(prop == NULL)
 		return NULL;
+	g_print("session.c get signal 15\n");
 	const gchar *ret = g_variant_get_string(prop, NULL);
 	g_variant_unref(prop);
 	return ret;
@@ -248,9 +266,11 @@ const gchar *obex_session_get_target(ObexSession *self, GError **error)
 {
 	g_assert(OBEX_SESSION_IS(self));
 	g_assert(self->priv->properties != NULL);
+	g_print("session.c get signal 16\n");
 	GVariant *prop = properties_get(self->priv->properties, OBEX_SESSION_DBUS_INTERFACE, "Target", error);
 	if(prop == NULL)
 		return NULL;
+	g_print("session.c get signal 17\n");
 	const gchar *ret = g_variant_get_string(prop, NULL);
 	g_variant_unref(prop);
 	return ret;
