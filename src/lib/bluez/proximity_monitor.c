@@ -75,6 +75,7 @@ static void proximity_monitor_finalize (GObject *gobject)
 
 static void proximity_monitor_class_init(ProximityMonitorClass *klass)
 {
+	g_print("proximity_monitor.c started2\n");
 	GObjectClass *gobject_class = G_OBJECT_CLASS(klass);
 
 	gobject_class->dispose = proximity_monitor_dispose;
@@ -83,7 +84,7 @@ static void proximity_monitor_class_init(ProximityMonitorClass *klass)
 	GParamSpec *pspec = NULL;
 	g_print("proximity_monitor.c signal sent through get\n");
 	gobject_class->get_property = _proximity_monitor_get_property;
-	g_print("proximity_monitor.c signal sent through set\n");
+	g_print("proximity_monitor.c signal sent through \n");
 	gobject_class->set_property = _proximity_monitor_set_property;
 	
 	/* object DBusObjectPath [readwrite, construct only] */
@@ -96,6 +97,7 @@ static void proximity_monitor_class_init(ProximityMonitorClass *klass)
 static void proximity_monitor_init(ProximityMonitor *self)
 {
 	g_print("proximity_monitor.c started\n");
+	g_print("proximity_monitor.c get signal sent 2\n");
 	self->priv = proximity_monitor_get_instance_private (self);
 	self->priv->proxy = NULL;
 	self->priv->properties = NULL;
@@ -109,6 +111,7 @@ static void _proximity_monitor_get_property(GObject *object, guint property_id, 
 
 	switch (property_id) {
 	case PROP_DBUS_OBJECT_PATH:
+		g_print("proximity_monitor.c signal sent g_value_set_string\n")
 		g_value_set_string(value, proximity_monitor_get_dbus_object_path(self));
 		break;
 
@@ -166,6 +169,7 @@ const gchar *proximity_monitor_get_dbus_object_path(ProximityMonitor *self)
 {
 	g_assert(PROXIMITY_MONITOR_IS(self));
 	g_assert(self->priv->proxy != NULL);
+	g_print("proximity_monitor.c get signal sent 3\n");
 	return g_dbus_proxy_get_object_path(self->priv->proxy);
 }
 
@@ -176,6 +180,7 @@ GVariant *proximity_monitor_get_properties(ProximityMonitor *self, GError **erro
 {
 	g_assert(PROXIMITY_MONITOR_IS(self));
 	g_assert(self->priv->properties != NULL);
+	g_print("proximity_monitor.c get all signal sent \n");
 	return properties_get_all(self->priv->properties, PROXIMITY_MONITOR_DBUS_INTERFACE, error);
 }
 
@@ -183,6 +188,7 @@ void proximity_monitor_set_property(ProximityMonitor *self, const gchar *name, c
 {
 	g_assert(PROXIMITY_MONITOR_IS(self));
 	g_assert(self->priv->properties != NULL);
+	g_print("proximity_monitor.c set signal sent through properties_set\n")
 	properties_set(self->priv->properties, PROXIMITY_MONITOR_DBUS_INTERFACE, name, value, error);
 }
 
@@ -190,6 +196,7 @@ const gchar *proximity_monitor_get_immediate_alert_level(ProximityMonitor *self,
 {
 	g_assert(PROXIMITY_MONITOR_IS(self));
 	g_assert(self->priv->properties != NULL);
+	g_print("proximity_monitor.c get signal sent 4\n");
 	GVariant *prop = properties_get(self->priv->properties, PROXIMITY_MONITOR_DBUS_INTERFACE, "ImmediateAlertLevel", error);
 	if(prop == NULL)
 		return NULL;
@@ -202,6 +209,7 @@ void proximity_monitor_set_immediate_alert_level(ProximityMonitor *self, const g
 {
 	g_assert(PROXIMITY_MONITOR_IS(self));
 	g_assert(self->priv->properties != NULL);
+	g_print("proximity_monitor.c signal sent through propeties_set 2\n")
 	properties_set(self->priv->properties, PROXIMITY_MONITOR_DBUS_INTERFACE, "ImmediateAlertLevel", g_variant_new_string(value), error);
 }
 
@@ -209,9 +217,11 @@ const gchar *proximity_monitor_get_link_loss_alert_level(ProximityMonitor *self,
 {
 	g_assert(PROXIMITY_MONITOR_IS(self));
 	g_assert(self->priv->properties != NULL);
+	g_print("proximity_monitor.c get signal sent 5\n");
 	GVariant *prop = properties_get(self->priv->properties, PROXIMITY_MONITOR_DBUS_INTERFACE, "LinkLossAlertLevel", error);
 	if(prop == NULL)
 		return NULL;
+	g_print("proximity_monitor.c get signal sent 6\n");
 	const gchar *ret = g_variant_get_string(prop, NULL);
 	g_variant_unref(prop);
 	return ret;
@@ -221,6 +231,7 @@ void proximity_monitor_set_link_loss_alert_level(ProximityMonitor *self, const g
 {
 	g_assert(PROXIMITY_MONITOR_IS(self));
 	g_assert(self->priv->properties != NULL);
+	g_print("proximity_monitor.c signal sent through prperties_set 3\n")
 	properties_set(self->priv->properties, PROXIMITY_MONITOR_DBUS_INTERFACE, "LinkLossAlertLevel", g_variant_new_string(value), error);
 }
 
@@ -228,9 +239,11 @@ const gchar *proximity_monitor_get_signal_level(ProximityMonitor *self, GError *
 {
 	g_assert(PROXIMITY_MONITOR_IS(self));
 	g_assert(self->priv->properties != NULL);
+	g_print("proximity_monitor.c get signal sent 7\n");
 	GVariant *prop = properties_get(self->priv->properties, PROXIMITY_MONITOR_DBUS_INTERFACE, "SignalLevel", error);
 	if(prop == NULL)
 		return NULL;
+	g_print("proximity_monitor.c get signal sent 8\n");
 	const gchar *ret = g_variant_get_string(prop, NULL);
 	g_variant_unref(prop);
 	return ret;
